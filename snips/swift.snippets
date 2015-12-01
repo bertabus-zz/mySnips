@@ -1,0 +1,74 @@
+snippet uicell "UITableViewCell empty shell"
+class ${1:myCellName}: UITableViewCell{
+    
+    var didSetupConstraints = false
+    
+    // Declare buttons,labels,views here... letbtn letlbl letview
+    ${1:myButton}
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String!) \{
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupViews()
+    \}
+    
+    func setupViews()\{
+        //add subViews, to self or contentview for cells
+        ${2:contentView}.addSubview(${1})
+        
+    \}
+    ************* not done
+    override func updateConstraints() {
+        if !didSetupConstraints {
+            // Note: if the constraints you add below require a larger cell size than the current size (which is likely to be the default size {320, 44}), you'll get an exception.
+            // As a fix, you can temporarily increase the size of the cell's contentView so that this does not occur using code similar to the line below.
+            //      See here for further discussion: https://github.com/Alex311/TableCellWithAutoLayout/commit/bde387b27e33605eeac3465475d2f2ff9775f163#commitcomment-4633188
+            contentView.bounds = CGRect(x: 0.0, y: 0.0, width: 99999.0, height: 99999.0)
+            
+//            // Prevent the two UILabels from being compressed below their intrinsic content height
+//            NSLayoutConstraint.autoSetPriority(UILayoutPriorityRequired) {
+//                self.titleLabel.autoSetContentCompressionResistancePriorityForAxis(.Vertical)
+//                self.bodyLabel.autoSetContentCompressionResistancePriorityForAxis(.Vertical)
+//            }
+            print("setting contstraints")
+            
+            usrHeader.autoPinEdge(.Left, toEdge: .Left, ofView: contentView, withOffset:8)
+            usrHeader.autoPinEdge(.Top, toEdge: .Top, ofView: contentView, withOffset:8)
+            usrHeader.autoPinEdge(.Right, toEdge: .Right, ofView: contentView, withOffset:-8)
+            
+            ////next row
+            mvmntImg.autoMatchDimension(.Height, toDimension: .Width, ofView: contentView)//can these be removed
+            mvmntImg.autoMatchDimension(.Width, toDimension: .Width, ofView: contentView)
+            mvmntImg.autoPinEdge(.Left, toEdge: .Left, ofView: contentView)
+            mvmntImg.autoPinEdge(.Right, toEdge: .Right, ofView: contentView)
+            mvmntImg.autoPinEdge(.Top, toEdge: .Bottom, ofView: usrHeader, withOffset: 8)
+            mvmntImg.userInteractionEnabled = true
+
+            imgBar.autoPinEdge(.Left, toEdge: .Left, ofView: contentView, withOffset:8)
+            imgBar.autoPinEdge(.Top, toEdge: .Bottom, ofView: mvmntImg, withOffset:8)
+            imgBar.autoPinEdge(.Right, toEdge: .Right, ofView: contentView, withOffset:0)
+            
+            moreComm.autoSetDimension(.Height, toSize: 15)
+            //moreComm.autoSetDimension(.Width, toSize: 150)
+            moreComm.autoPinEdge(.Top, toEdge: .Bottom, ofView: imgBar, withOffset:8)
+            moreComm.autoPinEdge(.Left, toEdge: .Left, ofView: contentView, withOffset:8)
+            moreComm.autoPinEdge(.Right, toEdge: .Right, ofView: contentView, withOffset:-8)
+            moreComm.textAlignment = NSTextAlignment.Center
+            //moreComm.autoAlignAxisToSuperviewAxis(.Vertical)
+            
+            NSLayoutConstraint.autoSetPriority(999) {
+                self.moreComm.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.contentView, withOffset:-8)
+            }
+            
+            didSetupConstraints = true
+        }
+        
+        super.updateConstraints()
+
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupViews()
+    }
+    
+}
